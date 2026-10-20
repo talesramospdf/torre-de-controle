@@ -36,7 +36,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple
 h1{font-size:clamp(28px,4.4vw,44px);line-height:1.1;letter-spacing:-.03em;margin:10px 0 14px;max-width:18ch}
 .lead{color:var(--slate);font-size:clamp(16px,1.6vw,18px);max-width:62ch;margin:0}
 .meta{margin-top:18px;font-size:13px;color:var(--muted)}
-.index{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.index{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
 .index a,.index .soon{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
 .index a:hover{border-color:#BFDBFE;background:var(--blue-t)}
 .index .soon{color:#94A3B8}
@@ -109,7 +109,7 @@ footer{padding:36px 0 56px;color:var(--muted);font-size:13px;border-top:1px soli
 /* mobile */
 @media (max-width:860px){
   .nav{display:none}
-  .index{grid-template-columns:1fr 1fr}
+  .index{grid-template-columns:1fr}
   .board{display:flex;flex-direction:column;gap:8px}
   .lane{display:none}
   .sh{order:var(--ord);margin-top:8px}
@@ -282,7 +282,6 @@ footer{padding:36px 0 56px;color:var(--muted);font-size:13px;border-top:1px soli
       <a href="#stakeholders">01 Stakeholders</a>
       <a href="#jornada">02 Jornada e fluxo</a>
       <a href="#requisitos">03 Requisitos</a>
-      <a href="prototipo.html">04 Protótipo</a>
     </nav>
     <button class="btn" onclick="window.print()" type="button">Baixar em PDF</button>
   </div>
@@ -298,7 +297,6 @@ footer{padding:36px 0 56px;color:var(--muted);font-size:13px;border-top:1px soli
       <a href="#stakeholders"><div class="n">01</div><div class="t">Mapa de stakeholders</div><div class="d">Quem participa e o que circula entre eles</div></a>
       <a href="#jornada"><div class="n">02</div><div class="t">Jornada e fluxo de informação</div><div class="d">Hoje versus com a Torre de Controle</div></a>
       <a href="#requisitos"><div class="n">03</div><div class="t">Requisitos priorizados</div><div class="d">Valor, prioridade e roadmap</div></a>
-      <a href="prototipo.html"><div class="n">04</div><div class="t">Protótipo interativo</div><div class="d">A tela do analista, em página à parte</div></a>
     </div>
   </div>
 
@@ -386,15 +384,10 @@ footer{padding:36px 0 56px;color:var(--muted);font-size:13px;border-top:1px soli
     </div>
   </section>
 
-  <section class="art" id="prototipo">
-    <div class="art-head"><span class="num">04</span><h2>Protótipo interativo</h2></div>
-    <p class="sub">Uma simulação, com dados fictícios, da tela do analista no piloto: fila de exceções por severidade, card com motivo do desvio e ETA, contato com o motorista por WhatsApp e encerramento com a causa-raiz. Fica em uma página à parte, para ser explorada com calma.</p>
-    <a class="btn" href="prototipo.html" style="display:inline-block;text-decoration:none;font-size:15px;padding:11px 18px">Abrir o protótipo interativo →</a>
-  </section>
 </main>
 
 <footer>
-  <div class="wrap">Torre de Controle Operacional por Exceção · Case Prático AutoU · Tales Ramos</div>
+  <div class="wrap">Torre de Controle Operacional por Exceção · Case Prático AutoU · Tales Ramos<br>Material complementar: <a href="prototipo.html" style="color:var(--blue-d)">protótipo interativo da tela do analista</a></div>
 </footer>
 
 <script>
