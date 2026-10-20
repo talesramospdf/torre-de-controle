@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protótipo interativo: tela do analista</title>
+<meta name="description" content="Simulação interativa, com dados fictícios, da tela do analista na Torre de Controle. Material complementar do Case Prático AutoU.">
+<style>
+:root{
+  --bg:#F8FAFC; --card:#FFFFFF; --ink:#0F172A; --slate:#334155; --muted:#64748B; --line:#E2E8F0;
+  --blue:#3B82F6; --blue-d:#1E3A8A; --blue-t:#EFF6FF;
+  --pain:#BE123C; --pain-t:#FFF1F2; --pain-l:#FECDD3;
+  --gain:#047857; --gain-t:#ECFDF5; --gain-l:#A7F3D0;
+  --radius:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* topo */
+.top{position:sticky;top:0;z-index:10;background:rgba(248,250,252,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:56px}
+.brand{font-weight:700;letter-spacing:-.01em;font-size:15px;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px var(--blue-t)}
+.nav{display:flex;gap:4px;font-size:14px;overflow-x:auto}
+.nav a{color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:8px;white-space:nowrap}
+.nav a:hover{background:var(--blue-t);color:var(--blue-d)}
+.nav .soon{color:#94A3B8;cursor:default;padding:6px 10px;white-space:nowrap}
+.btn{font:inherit;font-size:13px;font-weight:600;color:var(--blue-d);background:var(--blue-t);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#DBEAFE}
+
+/* hero */
+.hero{padding:56px 0 24px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+h1{font-size:clamp(28px,4.4vw,44px);line-height:1.1;letter-spacing:-.03em;margin:10px 0 14px;max-width:18ch}
+.lead{color:var(--slate);font-size:clamp(16px,1.6vw,18px);max-width:62ch;margin:0}
+.meta{margin-top:18px;font-size:13px;color:var(--muted)}
+.index{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.index a,.index .soon{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.index a:hover{border-color:#BFDBFE;background:var(--blue-t)}
+.index .soon{color:#94A3B8}
+.index .n{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--blue)}
+.index .soon .n{color:#94A3B8}
+.index .t{font-size:15px;font-weight:700;letter-spacing:-.01em;margin-top:2px}
+.index .d{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* seção */
+section.art{padding:40px 0 24px;border-top:1px solid var(--line);margin-top:32px}
+.art-head{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
+.num{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.08em}
+h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.02em;margin:0}
+.art p.sub{color:var(--slate);max-width:72ch;margin:8px 0 24px}
+
+/* legenda */
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--slate);margin:0 0 18px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:4px;border:1.5px solid}
+.sw.pain{background:var(--pain-t);border-color:var(--pain)}
+.sw.gain{background:var(--gain-t);border-color:var(--gain)}
+.sw.neu{background:#fff;border-color:#94A3B8}
+.sw.ch{border-radius:999px;border-color:#94A3B8;background:#fff}
+
+/* quadro de raias */
+.board-title{display:flex;align-items:center;gap:10px;margin:28px 0 10px;font-weight:700;font-size:17px;letter-spacing:-.01em;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+.pill.pain{background:var(--pain-t);color:var(--pain);border:1px solid var(--pain-l)}
+.pill.gain{background:var(--gain-t);color:var(--gain);border:1px solid var(--gain-l)}
+.board{display:grid;grid-template-columns:112px repeat(4,minmax(0,1fr));gap:8px 14px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+.lane{grid-column:1;grid-row:var(--row);display:flex;align-items:center;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0 6px;line-height:1.3}
+.sh{grid-column:var(--col);grid-row:1;padding:10px 12px;border-radius:10px;background:var(--ink);color:#fff;position:relative}
+.sh .t{font-size:12px;opacity:.75;font-variant-numeric:tabular-nums}
+.sh .n{font-size:14px;font-weight:700;line-height:1.25}
+.sh.arrow::after{content:"";position:absolute;right:-11px;top:50%;transform:translateY(-50%);border-left:8px solid #94A3B8;border-top:6px solid transparent;border-bottom:6px solid transparent}
+.board.gain-b .sh{background:var(--blue-d)}
+.cell{grid-column:var(--col);grid-row:var(--row);border:1.5px solid #CBD5E1;border-radius:10px;padding:10px 12px;font-size:13.5px;background:#fff;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.cell.pain{background:var(--pain-t);border-color:var(--pain-l)}
+.cell.gain{background:var(--gain-t);border-color:var(--gain-l)}
+.cell.empty{border:1.5px dashed var(--line);background:transparent}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:6px}
+.pain .tag{background:#fff;color:var(--pain);border:1px solid var(--pain-l)}
+.gain .tag{background:#fff;color:var(--gain);border:1px solid var(--gain-l)}
+.ch{margin-top:auto;font-size:11.5px;font-weight:600;color:var(--slate);background:#fff;border:1px solid #CBD5E1;border-radius:999px;padding:1px 9px}
+.lane-lbl{display:none;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.outcome{margin:10px 2px 0;font-size:14px;color:var(--slate)}
+.outcome b{color:var(--ink)}
+
+/* fluxo da informação */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 6px;margin:12px 2px 0;font-size:13px}
+.flow .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.flow .nd{background:#fff;border:1.5px solid #CBD5E1;border-radius:8px;padding:3px 10px;font-weight:600;color:var(--ink)}
+.flow .nd.hi{border-color:var(--blue);background:var(--blue-t);color:var(--blue-d)}
+.flow .ar{color:#94A3B8;font-weight:700}
+
+/* comparativo */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}
+.kpi{border-radius:var(--radius);padding:20px 22px;border:1px solid var(--line);background:var(--card)}
+.kpi .lbl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:6px}
+.kpi .big{font-size:clamp(30px,4.6vw,46px);font-weight:800;letter-spacing:-.04em;line-height:1}
+.kpi .cap{margin-top:8px;color:var(--slate);font-size:14px}
+.kpi.pain{border-color:var(--pain-l);background:var(--pain-t)} .kpi.pain .big{color:var(--pain)}
+.kpi.gain{border-color:var(--gain-l);background:var(--gain-t)} .kpi.gain .big{color:var(--gain)}
+.note{margin:18px 0 0;font-size:13px;color:var(--muted);max-width:80ch}
+
+footer{padding:36px 0 56px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:40px}
+
+.print-only{display:none}
+
+/* mobile */
+@media (max-width:860px){
+  .nav{display:none}
+  .index{grid-template-columns:1fr 1fr}
+  .board{display:flex;flex-direction:column;gap:8px}
+  .lane{display:none}
+  .sh{order:var(--ord);margin-top:8px}
+  .sh.arrow::after{display:none}
+  .cell{order:var(--ord)}
+  .cell.empty{display:none}
+  .lane-lbl{display:block}
+  .kpis{grid-template-columns:1fr}
+}
+@media (max-width:480px){ .index{grid-template-columns:1fr} }
+
+/* impressão (PDF): capa na primeira folha, um artefato por folha A4 paisagem */
+@page{size:A4 landscape;margin:10mm}
+@media print{
+  .top{position:static;background:none;border:0}
+  .top .wrap{height:auto;padding:0 0 4px}
+  .btn,.nav{display:none}
+  body{background:#fff;font-size:11px}
+  .hero{padding:6px 0 0}
+  h1{font-size:26px;margin:4px 0 6px}
+  .lead{font-size:13px}
+  .index{margin-top:12px}
+  section.art{margin-top:0;padding:0;border:0}
+  .art-body{zoom:.66}
+  .kpis{margin-top:14px}
+  .kpi{padding:12px 16px}
+  .blk2{break-before:page}
+  .print-only{display:block;font-size:13px;font-weight:700;color:var(--blue);margin:0 0 6px}
+  h2{font-size:22px}
+  .art p.sub{margin:4px 0 10px}
+  footer{display:none}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+/* ===== 01 mapa de stakeholders ===== */
+.map-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+.map-svg{display:block;width:100%;height:auto}
+.map-cards{display:none}
+.tier{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:6px;padding:2px 7px;display:inline-block}
+.t-G{background:var(--blue-d);color:#fff}
+.t-M{background:#DBEAFE;color:var(--blue-d)}
+.t-E{background:#fff;color:var(--blue-d);border:1px solid #93C5FD}
+.t-I{background:#F1F5F9;color:var(--slate);border:1px solid #CBD5E1}
+.sw.tG{background:var(--blue-d);border-color:var(--blue-d)}
+.sw.tM{background:#DBEAFE;border-color:#3B82F6}
+.sw.tE{background:#fff;border-color:#3B82F6}
+.sw.tI{background:#F1F5F9;border-color:#94A3B8}
+.sw.dash{border:0;border-top:2px dashed var(--pain);border-radius:0;height:0;width:22px;background:none;margin-top:1px}
+.mcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.mcard .nm{font-weight:700;margin:6px 0 2px}
+.mcard .pi{font-size:12.5px;color:var(--muted)}
+.mcard .fl{font-size:13px;color:var(--slate);margin-top:6px}
+.mcard .fl b{color:var(--ink)}
+
+/* ===== 03 requisitos ===== */
+.mx{display:grid;grid-template-columns:64px repeat(3,minmax(0,1fr));gap:8px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+.mx .ax{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center;padding:4px}
+.mx .qd{border:1.5px dashed var(--line);border-radius:10px;padding:10px;min-height:120px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.mx .qd.hot{background:var(--blue-t);border:1.5px solid #BFDBFE}
+.mx .qd .cp{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rq{font-size:12.5px;font-weight:600;border-radius:8px;padding:4px 9px;border:1.5px solid;line-height:1.3}
+.rq b{font-variant-numeric:tabular-nums}
+.m-must{background:var(--blue-d);border-color:var(--blue-d);color:#fff}
+.m-should{background:#DBEAFE;border-color:#93C5FD;color:var(--blue-d)}
+.m-could{background:#F1F5F9;border-color:#CBD5E1;color:var(--slate)}
+.m-wont{background:#fff;border-color:var(--pain);border-style:dashed;color:var(--pain)}
+.sw.mMust{background:var(--blue-d);border-color:var(--blue-d)}
+.sw.mShould{background:#DBEAFE;border-color:#93C5FD}
+.sw.mCould{background:#F1F5F9;border-color:#CBD5E1}
+.sw.mWont{background:#fff;border-color:var(--pain);border-style:dashed}
+.cp2{display:none;font-size:11.5px;color:var(--slate)}
+.insight{margin:14px 2px 0;font-size:14px;color:var(--slate)}
+.insight b{color:var(--ink)}
+.rm{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
+.ph{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+.ph .hd{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+.ph .tt{font-weight:700;margin:2px 0 4px}
+.ph .ds{font-size:13px;color:var(--muted);margin-bottom:10px}
+.ph .chips{display:flex;flex-wrap:wrap;gap:6px}
+.out{margin:12px 2px 0;font-size:13px;color:var(--muted)}
+
+/* ===== 04 protótipo ===== */
+.proto{background:var(--card);border:1px solid #CBD5E1;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(15,23,42,.08)}
+.pbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;background:var(--ink);color:#fff}
+.pbar .dots{display:flex;gap:6px}
+.pbar .dots i{width:10px;height:10px;border-radius:50%;background:#475569;display:block}
+.pbar .ttl{font-weight:700;font-size:14px}
+.pbar .fake{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#334155;border-radius:6px;padding:3px 8px}
+.pbar .rs{font:inherit;font-size:12px;font-weight:600;color:#fff;background:transparent;border:1px solid #64748B;border-radius:6px;padding:3px 9px;cursor:pointer}
+.pbar .rs:hover{background:#334155}
+.pstat{display:flex;gap:22px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line);background:#F8FAFC;font-size:13px;color:var(--slate)}
+.pstat b{font-size:18px;color:var(--ink);letter-spacing:-.02em;margin-right:4px}
+.pbody{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:460px}
+.pq{border-right:1px solid var(--line);padding:12px;background:#F8FAFC;display:flex;flex-direction:column;gap:8px}
+.pq h4,.pd h4{margin:0 0 2px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.qi{font:inherit;text-align:left;width:100%;background:#fff;border:1.5px solid #CBD5E1;border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink)}
+.qi:hover{border-color:#93C5FD}
+.qi[aria-pressed="true"]{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-t)}
+.qi .l1{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.qi .ld{font-size:12px;color:var(--muted)}
+.qi .sh2{font-size:13.5px;font-weight:600;line-height:1.3}
+.qi.done{opacity:.55}
+.sev{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:6px;padding:2px 7px}
+.sev1{background:var(--pain-t);color:var(--pain);border:1px solid var(--pain-l)}
+.sev2{background:#E2E8F0;color:var(--ink)}
+.sev3{background:#F1F5F9;color:var(--slate);border:1px solid #CBD5E1}
+.stg{font-size:11px;font-weight:700;color:var(--gain);margin-left:auto}
+.pd{padding:16px 18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.pd .hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pd .hd .nm{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fact{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.fact .k{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fact .v{font-weight:700;font-size:15px}
+.fact .v.bad{color:var(--pain)} .fact .v.ok{color:var(--gain)}
+.why{font-size:14px;color:var(--slate);margin:0}
+.tl{margin:0;padding:0;list-style:none;border-left:2px solid var(--line)}
+.tl li{font-size:13px;padding:2px 0 2px 12px;position:relative;color:var(--slate)}
+.tl li::before{content:"";position:absolute;left:-6px;top:9px;width:8px;height:8px;border-radius:50%;background:#94A3B8}
+.tl li.new::before{background:var(--blue)}
+.tl li b{font-variant-numeric:tabular-nums;color:var(--ink);margin-right:6px}
+.sugg{border:1.5px solid #BFDBFE;background:var(--blue-t);border-radius:10px;padding:10px 12px;font-size:14px}
+.sugg .lb{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue-d);display:block;margin-bottom:2px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bp{font:inherit;font-size:14px;font-weight:700;color:#fff;background:var(--blue-d);border:0;border-radius:9px;padding:9px 14px;cursor:pointer}
+.bp:hover{background:#1D4ED8}
+.bp:disabled{background:#94A3B8;cursor:not-allowed}
+.bs{font:inherit;font-size:13.5px;font-weight:600;color:var(--blue-d);background:#fff;border:1.5px solid #93C5FD;border-radius:9px;padding:8px 12px;cursor:pointer}
+.bs:hover{background:var(--blue-t)}
+.pd select{font:inherit;font-size:13.5px;padding:8px 10px;border-radius:9px;border:1.5px solid #CBD5E1;background:#fff;color:var(--ink)}
+.chat{display:flex;flex-direction:column;gap:6px}
+.bub{max-width:min(520px,92%);border-radius:12px;padding:8px 11px;font-size:13.5px;line-height:1.4}
+.bub .to{display:block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.8;margin-bottom:2px}
+.bub.out{background:#DCFCE7;align-self:flex-end;border-bottom-right-radius:3px}
+.bub.in{background:#F1F5F9;align-self:flex-start;border-bottom-left-radius:3px}
+.empty-s{margin:auto;text-align:center;color:var(--slate);max-width:46ch;padding:30px 10px}
+.empty-s b{display:block;font-size:18px;color:var(--gain);margin-bottom:6px}
+.hint{margin:0 0 14px;font-size:14px;color:var(--slate)}
+.hint b{color:var(--ink)}
+
+@media (max-width:860px){
+  .map-svg{display:none}
+  .map-cards{display:grid;gap:8px}
+  .rm{grid-template-columns:1fr 1fr}
+  .mx{display:flex;flex-direction:column;gap:8px;padding:8px}
+  .mx .ax,.mx>div:empty{display:none}
+  .mx .qd{min-height:0}
+  .cp2{display:block !important}
+  .pbody{grid-template-columns:1fr}
+  .pq{border-right:0;border-bottom:1px solid var(--line)}
+  .facts{grid-template-columns:1fr 1fr}
+}
+@media (max-width:520px){ .rm{grid-template-columns:1fr} .mx .ax{font-size:10px;letter-spacing:0} }
+
+@media print{
+  #stakeholders .art-body{zoom:1}
+  .map-svg{max-height:104mm}
+  #requisitos .art-body{zoom:.66}
+  #prototipo .art-body{zoom:.72}
+  .pbar .rs{display:none}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>Torre de Controle</div>
+    <span></span>
+    <a class="btn" href="index.html" style="text-decoration:none">← Artefatos visuais</a>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Case Prático AutoU · Material complementar</div>
+    <h1 style="max-width:22ch">Protótipo interativo: a tela do analista</h1>
+    <p class="lead">Simulação, com dados fictícios, do que o analista veria e faria no piloto da Smart Control Tower. A fila mostra só as cargas fora do planejado, ordenadas por severidade.</p>
+    <div class="meta">Elaborado por Tales Ramos · Consultor de Negócios · Nomes, placas, horários e números fictícios</div>
+  </div>
+  <section class="art" id="prototipo" style="margin-top:8px">
+    <div class="art-body">
+      <p class="hint"><b>Experimente:</b> selecione a carga de severidade 1, aprove a sugestão e encerre com a causa-raiz. Depois trate as outras duas e veja a fila ficar limpa.</p>
+      <div class="proto" id="proto"></div>
+      <p class="note">No piloto, o card traz o motivo do desvio e o ETA, e a decisão é do analista; o bloco "Sugestão da Torre" (fase 1.5) entra depois. Este protótipo é material complementar ao Relatório de Análise e Proposta.</p>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap">Torre de Controle Operacional por Exceção · Case Prático AutoU · Tales Ramos</div></footer>
+<script>
+/* ===== 04 protótipo ===== */
+(function(){
+  var root = document.getElementById("proto"); if(!root) return;
+  var CAUSES = ["Doca congestionada","Transportadora","Endereço","Avaria","Cliente ausente","Falha de sinal","Outro"];
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function fresh(){
+    return [
+      {id:"A",sev:1,short:"Parada 2 retida acima da média",load:"CT-4812 · Rota Sul 07",driver:"Motorista A. · placa ABC-1D23",
+       eta:"14:18",win:"14:00",etaCls:"bad",
+       why:"Permanência de 40 min acima da média histórica na parada 2. O ETA recalculado da parada 5 é 14:18, depois do fim da janela (14:00).",
+       tl:[["08:12","Saída do centro de distribuição"],["10:05","Chegada à parada 2"],["10:45","Alerta: permanência 40 min acima da média"]],
+       sugg:"Inverter a sequência: parada 5 antes da parada 4 (+6 km). Janela da parada 5 preservada, novo ETA 13:32.",
+       act:"Aprovar sugestão",
+       out:[["Motorista · WhatsApp","Rota reorganizada: siga para a parada 5 antes da 4. Responda: Ciente."],["Cliente da parada 5 · notificação","Sua entrega está confirmada para as 13:32, dentro da janela. Acompanhe pelo link de rastreio."]],
+       atl:["10:48","Sugestão aprovada; motorista e cliente avisados"],
+       stage:0,msgs:[],replies:null},
+      {id:"B",sev:2,short:"Sem posição há 25 min",load:"CT-4790 · Rota Norte 02",driver:"Motorista B. · placa DEF-2G34",
+       eta:"—",win:"15:30",etaCls:"",
+       why:"Última posição recebida há 25 min (limite configurado: 15 min). Ausência de dado também é tratada como exceção.",
+       tl:[["09:20","Saída do centro de distribuição"],["10:20","Última posição recebida"],["10:45","Alerta: sem posição há 25 min"]],
+       sugg:"",
+       act:"Pedir confirmação ao motorista",
+       out:[["Motorista · WhatsApp","Olá! Não recebemos sua posição. Como você está?"]],
+       atl:["10:46","Confirmação solicitada ao motorista"],
+       stage:0,msgs:[],replies:["Em rota","Parado","Com problema"]},
+      {id:"C",sev:3,short:"ETA 12 min acima do previsto",load:"CT-4833 · Rota Leste 11",driver:"Motorista C. · placa GHI-3J45",
+       eta:"15:12",win:"16:00",etaCls:"ok",
+       why:"ETA recalculado em 15:12, contra janela até 16:00. Não há risco de violação, mas o cliente deve ser informado do novo horário.",
+       tl:[["09:40","Saída do centro de distribuição"],["10:30","Trânsito acima do previsto"],["10:45","Alerta: ETA 12 min acima do previsto"]],
+       sugg:"Sem ação operacional. Avisar o cliente do novo ETA.",
+       act:"Avisar cliente do novo ETA",
+       out:[["Cliente · notificação","Atualização: sua entrega deve chegar por volta das 15:12."]],
+       atl:["10:47","Cliente avisado do novo ETA"],
+       stage:0,msgs:[],replies:null}
+    ];
+  }
+  var cards = fresh(), sel = "A", closed = 0, pickedCause = "";
+
+  function openCount(){ return cards.filter(function(c){return c.stage<3;}).length; }
+  function stageLbl(c){ return c.stage===3 ? "Encerrada" : (c.stage>=1 ? "Em tratamento" : ""); }
+
+  function render(){
+    var open = openCount();
+    var h = '<div class="pbar"><span class="dots"><i></i><i></i><i></i></span><span class="ttl">Torre de Controle · Painel do analista</span><span class="fake">Dados fictícios</span><button type="button" class="rs" id="rs">Reiniciar simulação</button></div>';
+    h += '<div class="pstat"><span><b>212</b>cargas em rota</span><span><b>'+open+'</b>fora do planejado</span><span><b>'+closed+'</b>encerradas com causa-raiz</span></div>';
+    h += '<div class="pbody"><div class="pq"><h4>Fila de exceções, por severidade</h4>';
+    cards.forEach(function(c){
+      h += '<button type="button" class="qi'+(c.stage===3?' done':'')+'" data-id="'+c.id+'" aria-pressed="'+(sel===c.id)+'">'+
+           '<span class="l1"><span class="sev sev'+c.sev+'">Sev. '+c.sev+'</span><span class="ld">'+esc(c.load)+'</span>'+
+           (stageLbl(c)?'<span class="stg">'+stageLbl(c)+'</span>':'')+'</span><span class="sh2">'+esc(c.short)+'</span></button>';
+    });
+    h += '</div><div class="pd">';
+    var c = cards.filter(function(x){return x.id===sel;})[0];
+    if(open===0){
+      h += '<div class="empty-s"><b>Fila limpa</b>Nenhuma exceção ativa. O que está dentro do planejado não consome a atenção do analista, e a melhoria contínua volta a caber no dia.</div>';
+    } else if(c){
+      h += '<div class="hd"><span class="sev sev'+c.sev+'">Sev. '+c.sev+'</span><span class="nm">'+esc(c.load)+'</span></div>';
+      h += '<div class="facts"><div class="fact"><div class="k">Motorista</div><div class="v" style="font-size:13.5px">'+esc(c.driver)+'</div></div>'+
+           '<div class="fact"><div class="k">ETA recalculado</div><div class="v '+c.etaCls+'">'+esc(c.eta)+'</div></div>'+
+           '<div class="fact"><div class="k">Fim da janela</div><div class="v">'+esc(c.win)+'</div></div></div>';
+      h += '<div><h4>Por que está na fila</h4><p class="why">'+esc(c.why)+'</p></div>';
+      var tl = c.tl.slice(); if(c.stage>=1) tl.push(c.atl);
+      h += '<div><h4>Linha do tempo</h4><ul class="tl">'+tl.map(function(e,i){var nw=(c.stage>=1 && i===tl.length-1)?' class="new"':''; return '<li'+nw+'><b>'+esc(e[0])+'</b>'+esc(e[1])+'</li>';}).join("")+'</ul></div>';
+      if(c.sugg){ h += '<div class="sugg"><span class="lb">Sugestão da Torre · fase 1.5</span>'+esc(c.sugg)+'</div>'; }
+      if(c.msgs.length){
+        h += '<div><h4>Comunicação enviada</h4><div class="chat">'+c.msgs.map(function(m){return '<div class="bub '+m[2]+'"><span class="to">'+esc(m[0])+'</span>'+esc(m[1])+'</div>';}).join("")+'</div></div>';
+      }
+      h += '<div class="acts">';
+      if(c.stage===0){
+        h += '<button type="button" class="bp" id="act">'+esc(c.act)+'</button>';
+      } else if(c.stage===1 && c.replies){
+        h += '<span style="font-size:13px;color:var(--slate)">Simule a resposta do motorista:</span>';
+        c.replies.forEach(function(r){ h += '<button type="button" class="bs" data-reply="'+esc(r)+'">'+esc(r)+'</button>'; });
+      } else if(c.stage===2 || (c.stage===1 && !c.replies)){
+        h += '<select id="cause" aria-label="Causa-raiz"><option value="">Selecione a causa-raiz</option>'+CAUSES.map(function(x){return '<option'+(pickedCause===x?' selected':'')+'>'+esc(x)+'</option>';}).join("")+'</select>'+
+             '<button type="button" class="bp" id="close"'+(pickedCause?'':' disabled')+'>Encerrar com causa-raiz</button>';
+      } else if(c.stage===3){
+        h += '<span style="font-size:13.5px;color:var(--gain);font-weight:700">Exceção encerrada. Causa registrada para a análise de causa-raiz.</span>';
+      }
+      h += '</div>';
+    }
+    h += '</div></div>';
+    root.innerHTML = h;
+    bind();
+  }
+
+  function bind(){
+    var q = root.querySelectorAll(".qi");
+    for(var i=0;i<q.length;i++){ q[i].onclick = function(){ sel=this.getAttribute("data-id"); pickedCause=""; render(); }; }
+    var rs = document.getElementById("rs"); if(rs) rs.onclick = function(){ cards=fresh(); sel="A"; closed=0; pickedCause=""; render(); };
+    var c = cards.filter(function(x){return x.id===sel;})[0]; if(!c) return;
+    var act = document.getElementById("act");
+    if(act) act.onclick = function(){
+      c.out.forEach(function(m){ c.msgs.push([m[0],m[1],"out"]); });
+      c.stage = 1; pickedCause = ""; render();
+    };
+    var rp = root.querySelectorAll("[data-reply]");
+    for(var j=0;j<rp.length;j++){ rp[j].onclick = function(){
+      var r = this.getAttribute("data-reply");
+      c.msgs.push(["Motorista · resposta", r, "in"]);
+      c.atl = [c.atl[0], c.atl[1]+"; resposta: "+r];
+      c.replies = null; render();
+    }; }
+    var cs = document.getElementById("cause");
+    if(cs) cs.onchange = function(){ pickedCause = this.value; var b=document.getElementById("close"); if(b) b.disabled = !pickedCause; };
+    var cl = document.getElementById("close");
+    if(cl) cl.onclick = function(){
+      if(!pickedCause) return;
+      c.stage = 3; closed++; pickedCause = "";
+      var nxt = cards.filter(function(x){return x.stage<3;})[0];
+      if(nxt) sel = nxt.id;
+      render();
+    };
+  }
+  render();
+})();
+</script>
+</body>
+</html>

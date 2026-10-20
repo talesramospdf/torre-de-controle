@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Torre de Controle: mapas e artefatos visuais</title>
+<meta name="description" content="Artefatos visuais de apoio ao relatório de análise e proposta da Smart Control Tower. Case Prático AutoU.">
+<style>
+:root{
+  --bg:#F8FAFC; --card:#FFFFFF; --ink:#0F172A; --slate:#334155; --muted:#64748B; --line:#E2E8F0;
+  --blue:#3B82F6; --blue-d:#1E3A8A; --blue-t:#EFF6FF;
+  --pain:#BE123C; --pain-t:#FFF1F2; --pain-l:#FECDD3;
+  --gain:#047857; --gain-t:#ECFDF5; --gain-l:#A7F3D0;
+  --radius:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* topo */
+.top{position:sticky;top:0;z-index:10;background:rgba(248,250,252,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:56px}
+.brand{font-weight:700;letter-spacing:-.01em;font-size:15px;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px var(--blue-t)}
+.nav{display:flex;gap:4px;font-size:14px;overflow-x:auto}
+.nav a{color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:8px;white-space:nowrap}
+.nav a:hover{background:var(--blue-t);color:var(--blue-d)}
+.nav .soon{color:#94A3B8;cursor:default;padding:6px 10px;white-space:nowrap}
+.btn{font:inherit;font-size:13px;font-weight:600;color:var(--blue-d);background:var(--blue-t);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#DBEAFE}
+
+/* hero */
+.hero{padding:56px 0 24px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+h1{font-size:clamp(28px,4.4vw,44px);line-height:1.1;letter-spacing:-.03em;margin:10px 0 14px;max-width:18ch}
+.lead{color:var(--slate);font-size:clamp(16px,1.6vw,18px);max-width:62ch;margin:0}
+.meta{margin-top:18px;font-size:13px;color:var(--muted)}
+.index{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.index a,.index .soon{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.index a:hover{border-color:#BFDBFE;background:var(--blue-t)}
+.index .soon{color:#94A3B8}
+.index .n{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--blue)}
+.index .soon .n{color:#94A3B8}
+.index .t{font-size:15px;font-weight:700;letter-spacing:-.01em;margin-top:2px}
+.index .d{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* seção */
+section.art{padding:40px 0 24px;border-top:1px solid var(--line);margin-top:32px}
+.art-head{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
+.num{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.08em}
+h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.02em;margin:0}
+.art p.sub{color:var(--slate);max-width:72ch;margin:8px 0 24px}
+
+/* legenda */
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--slate);margin:0 0 18px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:4px;border:1.5px solid}
+.sw.pain{background:var(--pain-t);border-color:var(--pain)}
+.sw.gain{background:var(--gain-t);border-color:var(--gain)}
+.sw.neu{background:#fff;border-color:#94A3B8}
+.sw.ch{border-radius:999px;border-color:#94A3B8;background:#fff}
+
+/* quadro de raias */
+.board-title{display:flex;align-items:center;gap:10px;margin:28px 0 10px;font-weight:700;font-size:17px;letter-spacing:-.01em;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+.pill.pain{background:var(--pain-t);color:var(--pain);border:1px solid var(--pain-l)}
+.pill.gain{background:var(--gain-t);color:var(--gain);border:1px solid var(--gain-l)}
+.board{display:grid;grid-template-columns:112px repeat(4,minmax(0,1fr));gap:8px 14px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+.lane{grid-column:1;grid-row:var(--row);display:flex;align-items:center;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0 6px;line-height:1.3}
+.sh{grid-column:var(--col);grid-row:1;padding:10px 12px;border-radius:10px;background:var(--ink);color:#fff;position:relative}
+.sh .t{font-size:12px;opacity:.75;font-variant-numeric:tabular-nums}
+.sh .n{font-size:14px;font-weight:700;line-height:1.25}
+.sh.arrow::after{content:"";position:absolute;right:-11px;top:50%;transform:translateY(-50%);border-left:8px solid #94A3B8;border-top:6px solid transparent;border-bottom:6px solid transparent}
+.board.gain-b .sh{background:var(--blue-d)}
+.cell{grid-column:var(--col);grid-row:var(--row);border:1.5px solid #CBD5E1;border-radius:10px;padding:10px 12px;font-size:13.5px;background:#fff;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.cell.pain{background:var(--pain-t);border-color:var(--pain-l)}
+.cell.gain{background:var(--gain-t);border-color:var(--gain-l)}
+.cell.empty{border:1.5px dashed var(--line);background:transparent}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:6px}
+.pain .tag{background:#fff;color:var(--pain);border:1px solid var(--pain-l)}
+.gain .tag{background:#fff;color:var(--gain);border:1px solid var(--gain-l)}
+.ch{margin-top:auto;font-size:11.5px;font-weight:600;color:var(--slate);background:#fff;border:1px solid #CBD5E1;border-radius:999px;padding:1px 9px}
+.lane-lbl{display:none;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.outcome{margin:10px 2px 0;font-size:14px;color:var(--slate)}
+.outcome b{color:var(--ink)}
+
+/* fluxo da informação */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 6px;margin:12px 2px 0;font-size:13px}
+.flow .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.flow .nd{background:#fff;border:1.5px solid #CBD5E1;border-radius:8px;padding:3px 10px;font-weight:600;color:var(--ink)}
+.flow .nd.hi{border-color:var(--blue);background:var(--blue-t);color:var(--blue-d)}
+.flow .ar{color:#94A3B8;font-weight:700}
+
+/* comparativo */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}
+.kpi{border-radius:var(--radius);padding:20px 22px;border:1px solid var(--line);background:var(--card)}
+.kpi .lbl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:6px}
+.kpi .big{font-size:clamp(30px,4.6vw,46px);font-weight:800;letter-spacing:-.04em;line-height:1}
+.kpi .cap{margin-top:8px;color:var(--slate);font-size:14px}
+.kpi.pain{border-color:var(--pain-l);background:var(--pain-t)} .kpi.pain .big{color:var(--pain)}
+.kpi.gain{border-color:var(--gain-l);background:var(--gain-t)} .kpi.gain .big{color:var(--gain)}
+.note{margin:18px 0 0;font-size:13px;color:var(--muted);max-width:80ch}
+
+footer{padding:36px 0 56px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:40px}
+
+.print-only{display:none}
+
+/* mobile */
+@media (max-width:860px){
+  .nav{display:none}
+  .index{grid-template-columns:1fr 1fr}
+  .board{display:flex;flex-direction:column;gap:8px}
+  .lane{display:none}
+  .sh{order:var(--ord);margin-top:8px}
+  .sh.arrow::after{display:none}
+  .cell{order:var(--ord)}
+  .cell.empty{display:none}
+  .lane-lbl{display:block}
+  .kpis{grid-template-columns:1fr}
+}
+@media (max-width:480px){ .index{grid-template-columns:1fr} }
+
+/* impressão (PDF): capa na primeira folha, um artefato por folha A4 paisagem */
+@page{size:A4 landscape;margin:10mm}
+@media print{
+  .top{position:static;background:none;border:0}
+  .top .wrap{height:auto;padding:0 0 4px}
+  .btn,.nav{display:none}
+  body{background:#fff;font-size:11px}
+  .hero{padding:6px 0 0}
+  h1{font-size:26px;margin:4px 0 6px}
+  .lead{font-size:13px}
+  .index{margin-top:12px}
+  section.art{break-before:page;margin-top:0;padding:0;border:0}
+  .art-body{zoom:.66}
+  .kpis{margin-top:14px}
+  .kpi{padding:12px 16px}
+  .blk2{break-before:page}
+  .print-only{display:block;font-size:13px;font-weight:700;color:var(--blue);margin:0 0 6px}
+  h2{font-size:22px}
+  .art p.sub{margin:4px 0 10px}
+  footer{display:none}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+/* ===== 01 mapa de stakeholders ===== */
+.map-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+.map-svg{display:block;width:100%;height:auto}
+.map-cards{display:none}
+.tier{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:6px;padding:2px 7px;display:inline-block}
+.t-G{background:var(--blue-d);color:#fff}
+.t-M{background:#DBEAFE;color:var(--blue-d)}
+.t-E{background:#fff;color:var(--blue-d);border:1px solid #93C5FD}
+.t-I{background:#F1F5F9;color:var(--slate);border:1px solid #CBD5E1}
+.sw.tG{background:var(--blue-d);border-color:var(--blue-d)}
+.sw.tM{background:#DBEAFE;border-color:#3B82F6}
+.sw.tE{background:#fff;border-color:#3B82F6}
+.sw.tI{background:#F1F5F9;border-color:#94A3B8}
+.sw.dash{border:0;border-top:2px dashed var(--pain);border-radius:0;height:0;width:22px;background:none;margin-top:1px}
+.mcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.mcard .nm{font-weight:700;margin:6px 0 2px}
+.mcard .pi{font-size:12.5px;color:var(--muted)}
+.mcard .fl{font-size:13px;color:var(--slate);margin-top:6px}
+.mcard .fl b{color:var(--ink)}
+
+/* ===== 03 requisitos ===== */
+.mx{display:grid;grid-template-columns:64px repeat(3,minmax(0,1fr));gap:8px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+.mx .ax{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center;padding:4px}
+.mx .qd{border:1.5px dashed var(--line);border-radius:10px;padding:10px;min-height:120px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.mx .qd.hot{background:var(--blue-t);border:1.5px solid #BFDBFE}
+.mx .qd .cp{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rq{font-size:12.5px;font-weight:600;border-radius:8px;padding:4px 9px;border:1.5px solid;line-height:1.3}
+.rq b{font-variant-numeric:tabular-nums}
+.m-must{background:var(--blue-d);border-color:var(--blue-d);color:#fff}
+.m-should{background:#DBEAFE;border-color:#93C5FD;color:var(--blue-d)}
+.m-could{background:#F1F5F9;border-color:#CBD5E1;color:var(--slate)}
+.m-wont{background:#fff;border-color:var(--pain);border-style:dashed;color:var(--pain)}
+.sw.mMust{background:var(--blue-d);border-color:var(--blue-d)}
+.sw.mShould{background:#DBEAFE;border-color:#93C5FD}
+.sw.mCould{background:#F1F5F9;border-color:#CBD5E1}
+.sw.mWont{background:#fff;border-color:var(--pain);border-style:dashed}
+.cp2{display:none;font-size:11.5px;color:var(--slate)}
+.insight{margin:14px 2px 0;font-size:14px;color:var(--slate)}
+.insight b{color:var(--ink)}
+.rm{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
+.ph{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+.ph .hd{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+.ph .tt{font-weight:700;margin:2px 0 4px}
+.ph .ds{font-size:13px;color:var(--muted);margin-bottom:10px}
+.ph .chips{display:flex;flex-wrap:wrap;gap:6px}
+.out{margin:12px 2px 0;font-size:13px;color:var(--muted)}
+
+/* ===== 04 protótipo ===== */
+.proto{background:var(--card);border:1px solid #CBD5E1;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(15,23,42,.08)}
+.pbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;background:var(--ink);color:#fff}
+.pbar .dots{display:flex;gap:6px}
+.pbar .dots i{width:10px;height:10px;border-radius:50%;background:#475569;display:block}
+.pbar .ttl{font-weight:700;font-size:14px}
+.pbar .fake{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#334155;border-radius:6px;padding:3px 8px}
+.pbar .rs{font:inherit;font-size:12px;font-weight:600;color:#fff;background:transparent;border:1px solid #64748B;border-radius:6px;padding:3px 9px;cursor:pointer}
+.pbar .rs:hover{background:#334155}
+.pstat{display:flex;gap:22px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line);background:#F8FAFC;font-size:13px;color:var(--slate)}
+.pstat b{font-size:18px;color:var(--ink);letter-spacing:-.02em;margin-right:4px}
+.pbody{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:460px}
+.pq{border-right:1px solid var(--line);padding:12px;background:#F8FAFC;display:flex;flex-direction:column;gap:8px}
+.pq h4,.pd h4{margin:0 0 2px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.qi{font:inherit;text-align:left;width:100%;background:#fff;border:1.5px solid #CBD5E1;border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink)}
+.qi:hover{border-color:#93C5FD}
+.qi[aria-pressed="true"]{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-t)}
+.qi .l1{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.qi .ld{font-size:12px;color:var(--muted)}
+.qi .sh2{font-size:13.5px;font-weight:600;line-height:1.3}
+.qi.done{opacity:.55}
+.sev{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:6px;padding:2px 7px}
+.sev1{background:var(--pain-t);color:var(--pain);border:1px solid var(--pain-l)}
+.sev2{background:#E2E8F0;color:var(--ink)}
+.sev3{background:#F1F5F9;color:var(--slate);border:1px solid #CBD5E1}
+.stg{font-size:11px;font-weight:700;color:var(--gain);margin-left:auto}
+.pd{padding:16px 18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.pd .hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pd .hd .nm{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fact{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.fact .k{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fact .v{font-weight:700;font-size:15px}
+.fact .v.bad{color:var(--pain)} .fact .v.ok{color:var(--gain)}
+.why{font-size:14px;color:var(--slate);margin:0}
+.tl{margin:0;padding:0;list-style:none;border-left:2px solid var(--line)}
+.tl li{font-size:13px;padding:2px 0 2px 12px;position:relative;color:var(--slate)}
+.tl li::before{content:"";position:absolute;left:-6px;top:9px;width:8px;height:8px;border-radius:50%;background:#94A3B8}
+.tl li.new::before{background:var(--blue)}
+.tl li b{font-variant-numeric:tabular-nums;color:var(--ink);margin-right:6px}
+.sugg{border:1.5px solid #BFDBFE;background:var(--blue-t);border-radius:10px;padding:10px 12px;font-size:14px}
+.sugg .lb{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue-d);display:block;margin-bottom:2px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bp{font:inherit;font-size:14px;font-weight:700;color:#fff;background:var(--blue-d);border:0;border-radius:9px;padding:9px 14px;cursor:pointer}
+.bp:hover{background:#1D4ED8}
+.bp:disabled{background:#94A3B8;cursor:not-allowed}
+.bs{font:inherit;font-size:13.5px;font-weight:600;color:var(--blue-d);background:#fff;border:1.5px solid #93C5FD;border-radius:9px;padding:8px 12px;cursor:pointer}
+.bs:hover{background:var(--blue-t)}
+.pd select{font:inherit;font-size:13.5px;padding:8px 10px;border-radius:9px;border:1.5px solid #CBD5E1;background:#fff;color:var(--ink)}
+.chat{display:flex;flex-direction:column;gap:6px}
+.bub{max-width:min(520px,92%);border-radius:12px;padding:8px 11px;font-size:13.5px;line-height:1.4}
+.bub .to{display:block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.8;margin-bottom:2px}
+.bub.out{background:#DCFCE7;align-self:flex-end;border-bottom-right-radius:3px}
+.bub.in{background:#F1F5F9;align-self:flex-start;border-bottom-left-radius:3px}
+.empty-s{margin:auto;text-align:center;color:var(--slate);max-width:46ch;padding:30px 10px}
+.empty-s b{display:block;font-size:18px;color:var(--gain);margin-bottom:6px}
+.hint{margin:0 0 14px;font-size:14px;color:var(--slate)}
+.hint b{color:var(--ink)}
+
+@media (max-width:860px){
+  .map-svg{display:none}
+  .map-cards{display:grid;gap:8px}
+  .rm{grid-template-columns:1fr 1fr}
+  .mx{display:flex;flex-direction:column;gap:8px;padding:8px}
+  .mx .ax,.mx>div:empty{display:none}
+  .mx .qd{min-height:0}
+  .cp2{display:block !important}
+  .pbody{grid-template-columns:1fr}
+  .pq{border-right:0;border-bottom:1px solid var(--line)}
+  .facts{grid-template-columns:1fr 1fr}
+}
+@media (max-width:520px){ .rm{grid-template-columns:1fr} .mx .ax{font-size:10px;letter-spacing:0} }
+
+@media print{
+  #stakeholders .art-body{zoom:1}
+  .map-svg{max-height:104mm}
+  #requisitos .art-body{zoom:.66}
+  .pbar .rs{display:none}
+  #prototipo{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>Torre de Controle</div>
+    <nav class="nav" aria-label="Artefatos">
+      <a href="#stakeholders">01 Stakeholders</a>
+      <a href="#jornada">02 Jornada e fluxo</a>
+      <a href="#requisitos">03 Requisitos</a>
+      <a href="prototipo.html">04 Protótipo</a>
+    </nav>
+    <button class="btn" onclick="window.print()" type="button">Baixar em PDF</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Case Prático AutoU · Entregável 2</div>
+    <h1>Da gestão por incêndio à gestão por exceção</h1>
+    <p class="lead">Artefatos visuais de apoio ao Relatório de Análise e Proposta da Smart Control Tower, a torre de controle que mostra ao analista apenas o que exige decisão.</p>
+    <div class="meta">Elaborado por Tales Ramos · Consultor de Negócios · Dados e horários ilustrativos</div>
+    <div class="index">
+      <a href="#stakeholders"><div class="n">01</div><div class="t">Mapa de stakeholders</div><div class="d">Quem participa e o que circula entre eles</div></a>
+      <a href="#jornada"><div class="n">02</div><div class="t">Jornada e fluxo de informação</div><div class="d">Hoje versus com a Torre de Controle</div></a>
+      <a href="#requisitos"><div class="n">03</div><div class="t">Requisitos priorizados</div><div class="d">Valor, prioridade e roadmap</div></a>
+      <a href="prototipo.html"><div class="n">04</div><div class="t">Protótipo interativo</div><div class="d">A tela do analista, em página à parte</div></a>
+    </div>
+  </div>
+
+  <section class="art" id="stakeholders">
+    <div class="art-head"><span class="num">01</span><h2>Mapa de stakeholders</h2></div>
+    <p class="sub">No centro, a Torre de Controle. Ao redor, quem a alimenta e quem recebe valor dela, com o que circula em cada relação. A cor indica a estratégia de engajamento, definida por poder e interesse de cada ator. As linhas tracejadas em vermelho são os fluxos reativos de hoje que a Torre substitui.</p>
+    <div class="art-body">
+      <div class="legend">
+        <span><i class="sw tG"></i>Gerenciar de perto</span>
+        <span><i class="sw tM"></i>Manter satisfeito</span>
+        <span><i class="sw tE"></i>Envolver e manter informado</span>
+        <span><i class="sw tI"></i>Informar</span>
+        <span><i class="sw dash"></i>Fluxo reativo de hoje</span>
+      </div>
+      <div class="map-wrap">
+        <svg class="map-svg" id="map-svg" viewBox="0 0 1000 560" role="img" aria-label="Mapa de stakeholders em torno da Torre de Controle"></svg>
+        <div class="map-cards" id="map-cards"></div>
+      </div>
+      <p class="note">Poder e interesse conforme a classificação do relatório (seção 2.2), a validar com o patrocinador.</p>
+    </div>
+  </section>
+
+  <section class="art" id="jornada">
+    <div class="art-head"><span class="num">02</span><h2>Jornada e fluxo de informação</h2></div>
+    <p class="sub">Um dia típico de operação, na visão de quatro atores. Em cima, o cenário de hoje, em que o atraso só é descoberto quando o cliente liga. Embaixo, o cenário com a Torre de Controle, em que o desvio é detectado e tratado antes da janela vencer. Cada célula indica o canal pelo qual a informação circula.</p>
+    <div class="art-body">
+    <div class="legend">
+      <span><i class="sw pain"></i>Ponto de dor</span>
+      <span><i class="sw gain"></i>Ganho com a Torre de Controle</span>
+      <span><i class="sw neu"></i>Ação ou estado neutro</span>
+      <span><i class="sw ch"></i>Canal da informação</span>
+    </div>
+
+    <div class="board-title"><span class="pill pain">Hoje</span>Reativo: o cliente descobre primeiro</div>
+    <div class="board" id="b-asis" role="group" aria-label="Jornada atual"></div>
+    <div class="flow" aria-label="Fluxo da informação hoje">
+      <span class="lbl">Fluxo da informação</span>
+      <span class="nd">Sistemas legados</span><span class="ar">→</span>
+      <span class="nd">Planilhas (manual)</span><span class="ar">→</span>
+      <span class="nd">Analista</span><span class="ar">⇄</span>
+      <span class="nd">Telefone</span><span class="ar">⇄</span>
+      <span class="nd">Motorista · Cliente</span>
+    </div>
+    <p class="outcome"><b>Resultado:</b> janela perdida, frete reverso, analista sobrecarregado e cliente insatisfeito.</p>
+
+    <div class="blk2"><div class="print-only">02 · Jornada e fluxo de informação (continuação)</div>
+    <div class="board-title"><span class="pill gain">Com a Torre</span>Proativo: a exceção chega ao analista antes do cliente</div>
+    <div class="board gain-b" id="b-tobe" role="group" aria-label="Jornada com a Torre de Controle"></div>
+    <div class="flow" aria-label="Fluxo da informação com a Torre">
+      <span class="lbl">Fluxo da informação</span>
+      <span class="nd">Sistemas legados</span><span class="ar">→</span>
+      <span class="nd">API</span><span class="ar">→</span>
+      <span class="nd hi">Torre de Controle</span><span class="ar">→</span>
+      <span class="nd hi">Painel de exceções</span><span class="ar">→</span>
+      <span class="nd">Analista</span><span class="ar">→</span>
+      <span class="nd">WhatsApp</span><span class="ar">→</span>
+      <span class="nd">Motorista · Cliente</span>
+    </div>
+    <p class="outcome"><b>Resultado:</b> janela preservada, cliente avisado sem precisar ligar e analista resolvendo em minutos.</p>
+
+    <div class="kpis">
+      <div class="kpi pain"><div class="lbl">Hoje</div><div class="big">30 min depois</div><div class="cap">da janela de entrega (14:00) o problema se torna conhecido, quando o cliente liga às 14:30</div></div>
+      <div class="kpi gain"><div class="lbl">Com a Torre</div><div class="big">3 h 12 min antes</div><div class="cap">da janela de entrega (14:00) o problema já é conhecido e tratado, às 10:48</div></div>
+    </div>
+    <p class="note">Mesma régua nos dois cenários: o momento em que o problema é conhecido em relação à janela de entrega. Horários e valores ilustrativos de um dia típico. No piloto, o card de exceção traz o motivo do desvio e o ETA recalculado, e a decisão é do analista; a sugestão automática de ação entra na fase 1.5.</p>
+    </div>
+    </div>
+  </section>
+
+  <section class="art" id="requisitos">
+    <div class="art-head"><span class="num">03</span><h2>Requisitos priorizados</h2></div>
+    <p class="sub">Os requisitos funcionais do relatório (R1 a R13) posicionados por valor para o negócio e esforço de implantação. A cor mostra a prioridade MoSCoW. Abaixo, em que fase cada requisito entra.</p>
+    <div class="art-body">
+      <div class="legend">
+        <span><i class="sw mMust"></i>Must (essencial no piloto)</span>
+        <span><i class="sw mShould"></i>Should (na sequência)</span>
+        <span><i class="sw mCould"></i>Could (desejável)</span>
+        <span><i class="sw mWont"></i>Won't (fora desta etapa)</span>
+      </div>
+      <div class="mx" id="mx" role="group" aria-label="Matriz de valor por esforço"></div>
+      <p class="insight"><b>Leitura:</b> os dois must-have de maior esforço, a integração com os legados (R2) e o ETA (R6), são exatamente os que a decisão de usar uma camada desacoplada e de adquirir o ETA do mercado reduzem. O requisito mais barato e de alto valor, tratar a ausência de dado como exceção (R4), entra desde o primeiro dia.</p>
+
+      <div class="rm" id="rm"></div>
+      <p class="out">Esforço: estimativa qualitativa do autor, a confirmar com TI e com a consulta ao mercado da fase 0. Valor: conforme a seção 4 do relatório.</p>
+    </div>
+  </section>
+
+  <section class="art" id="prototipo">
+    <div class="art-head"><span class="num">04</span><h2>Protótipo interativo</h2></div>
+    <p class="sub">Uma simulação, com dados fictícios, da tela do analista no piloto: fila de exceções por severidade, card com motivo do desvio e ETA, contato com o motorista por WhatsApp e encerramento com a causa-raiz. Fica em uma página à parte, para ser explorada com calma.</p>
+    <a class="btn" href="prototipo.html" style="display:inline-block;text-decoration:none;font-size:15px;padding:11px 18px">Abrir o protótipo interativo →</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Torre de Controle Operacional por Exceção · Case Prático AutoU · Tales Ramos</div>
+</footer>
+
+<script>
+(function(){
+  var asis = {
+    lanes: ["Analista","Motorista","Cliente","Sistemas legados"],
+    steps: [
+      {t:"08:00", n:"Planejamento manual"},
+      {t:"11:30", n:"Sinistro invisível"},
+      {t:"14:30", n:"Cliente reclama"},
+      {t:"16:00", n:"Resolução reativa"}
+    ],
+    cells: [
+      {s:0,l:"Analista",k:"pain",tag:"Manual",ch:"via planilha",x:"Exporta relatórios dos sistemas legados, cola em planilhas e monta a listagem do dia."},
+      {s:0,l:"Sistemas legados",k:"pain",tag:"Silos",x:"ERP, TMS e planilhas sem conexão entre si."},
+      {s:1,l:"Motorista",k:"neu",x:"Retido em doca congestionada, perde o horário da próxima janela."},
+      {s:1,l:"Analista",k:"pain",tag:"Cegueira",x:"Ninguém na central sabe do atraso."},
+      {s:1,l:"Sistemas legados",k:"pain",tag:"Sem alerta",x:"Nenhum aviso é gerado."},
+      {s:2,l:"Cliente",k:"pain",tag:"Descobre primeiro",ch:"via telefone",x:"Liga cobrando a carga prevista para as 14:00."},
+      {s:2,l:"Analista",k:"pain",tag:"Telefonista",ch:"via telefone",x:"Interrompe o trabalho e liga para o motorista."},
+      {s:2,l:"Motorista",k:"neu",ch:"via telefone",x:"Não atende: está em manobra."},
+      {s:3,l:"Analista",k:"neu",x:"Confirma a perda da janela de recebimento."},
+      {s:3,l:"Cliente",k:"pain",tag:"Custo",x:"Entrega cancelada, com frete reverso e desgaste comercial."}
+    ]
+  };
+
+  var tobe = {
+    lanes: ["Analista","Motorista","Cliente","Torre de Controle"],
+    steps: [
+      {t:"08:00", n:"Ingestão automática"},
+      {t:"10:45", n:"Detecção antecipada"},
+      {t:"10:46", n:"Ação sugerida"},
+      {t:"10:48", n:"Resolução com um clique"}
+    ],
+    cells: [
+      {s:0,l:"Torre de Controle",k:"gain",tag:"Integração",ch:"via API",x:"Cargas sincronizadas dos sistemas legados, sem planilhas."},
+      {s:0,l:"Analista",k:"gain",tag:"Painel único",ch:"via painel",x:"Abre a tela com o status geral estável."},
+      {s:1,l:"Torre de Controle",k:"gain",tag:"Detecção",ch:"via painel",x:"Detecta permanência 40 min acima da média na parada 2, recalcula o ETA e vê a janela da parada 5 (até 14:00) em risco."},
+      {s:1,l:"Motorista",k:"neu",x:"Em doca na parada 2, sem receber ligação."},
+      {s:2,l:"Analista",k:"gain",tag:"Fase 1.5 · sugestão",ch:"via painel",x:"Card de severidade 1 com o motivo e o ETA. Sugestão: inverter as paradas 5 e 4 (+6 km), janela preservada."},
+      {s:3,l:"Analista",k:"neu",ch:"via painel",x:"Aprova a sugestão com um clique."},
+      {s:3,l:"Motorista",k:"gain",tag:"Sem digitar",ch:"via WhatsApp",x:"Recebe a rota reorganizada."},
+      {s:3,l:"Cliente",k:"gain",tag:"Proativo",ch:"via notificação",x:"Recebe aviso confirmando a entrega e não precisa ligar."},
+      {s:3,l:"Torre de Controle",k:"gain",tag:"Aprendizado",x:"Registra a causa-raiz no encerramento."}
+    ]
+  };
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+  function render(id, data){
+    var el = document.getElementById(id), h = "", L = data.lanes;
+    L.forEach(function(l,i){
+      h += '<div class="lane" style="--row:'+(i+2)+'">'+esc(l)+'</div>';
+    });
+    data.steps.forEach(function(st,i){
+      var last = i === data.steps.length-1;
+      h += '<div class="sh'+(last?'':' arrow')+'" style="--col:'+(i+2)+';--ord:'+(i*10)+'"><div class="t">'+esc(st.t)+'</div><div class="n">'+esc(st.n)+'</div></div>';
+    });
+    data.steps.forEach(function(st,s){
+      L.forEach(function(l,li){
+        var c = data.cells.filter(function(c){return c.s===s && c.l===l})[0];
+        var style = '--col:'+(s+2)+';--row:'+(li+2)+';--ord:'+(s*10+li+1);
+        if(!c){ h += '<div class="cell empty" style="'+style+'"></div>'; return; }
+        h += '<div class="cell '+c.k+'" style="'+style+'"><div class="lane-lbl">'+esc(l)+'</div>'+
+             (c.tag?'<span class="tag">'+esc(c.tag)+'</span>':'')+
+             '<div>'+esc(c.x)+'</div>'+
+             (c.ch?'<span class="ch">'+esc(c.ch)+'</span>':'')+'</div>';
+      });
+    });
+    el.innerHTML = h;
+  }
+  render("b-asis", asis);
+  render("b-tobe", tobe);
+})();
+
+/* ===== 01 mapa de stakeholders ===== */
+(function(){
+  var T = {x:500, y:280, w:200, h:90};
+  var NW = 210, NH = 64;
+  var TIERS = {
+    G:{label:"Gerenciar de perto", fill:"#1E3A8A", stroke:"#1E3A8A", ink:"#FFFFFF", sub:"#BFDBFE"},
+    M:{label:"Manter satisfeito", fill:"#DBEAFE", stroke:"#3B82F6", ink:"#1E3A8A", sub:"#475569"},
+    E:{label:"Envolver e manter informado", fill:"#FFFFFF", stroke:"#3B82F6", ink:"#0F172A", sub:"#64748B"},
+    I:{label:"Informar", fill:"#F1F5F9", stroke:"#94A3B8", ink:"#0F172A", sub:"#64748B"}
+  };
+  var N = [
+    {id:"pat", x:500, y:44,  name:["Patrocinador executivo"], pi:"Poder alto · Interesse alto", t:"G", send:"decisões e gates", recv:"resultados"},
+    {id:"mot", x:120, y:60,  name:["Motoristas e","transportadoras"], pi:"Poder médio · Interesse médio", t:"E", send:"posição, confirmações", recv:"contatos e rota"},
+    {id:"ana", x:120, y:205, name:["Analistas de operações"], pi:"Poder médio · Interesse alto", t:"E", send:"decisões, causa-raiz", recv:"cards de exceção"},
+    {id:"fil", x:120, y:350, name:["Filiais e polos"], pi:"Poder médio · Interesse médio", t:"E", send:"marcos e volumes", recv:"previsão de chegada"},
+    {id:"ti",  x:120, y:495, name:["TI e sistemas legados"], pi:"Poder alto · Interesse médio", t:"G", send:"dados de ERP e TMS", recv:""},
+    {id:"cli", x:880, y:60,  name:["Clientes finais"], pi:"Poder baixo · Interesse médio", t:"I", send:"", recv:"aviso proativo e ETA"},
+    {id:"sac", x:880, y:205, name:["SAC e atendimento"], pi:"Poder baixo · Interesse alto", t:"E", send:"", recv:"status de rastreio"},
+    {id:"com", x:880, y:350, name:["Comercial e contas-chave"], pi:"Poder médio · Interesse alto", t:"E", send:"regras de aviso", recv:"alertas por cliente"},
+    {id:"ges", x:880, y:495, name:["Gestores de logística"], pi:"Poder alto · Interesse alto", t:"G", send:"", recv:"OTIF, MTTD e MTTR"},
+    {id:"jur", x:500, y:516, name:["Jurídico e DPO"], pi:"Poder alto · Interesse baixo", t:"M", send:"base legal", recv:"trilha de auditoria"}
+  ];
+  var DASH = [
+    {a:"mot", b:"ana", label:"hoje: ligações repetidas"},
+    {a:"cli", b:"sac", label:"hoje: ligações de WISMO"}
+  ];
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function clip(cx,cy,w,h,tx,ty){
+    var dx=tx-cx, dy=ty-cy;
+    if(dx===0 && dy===0) return {x:cx,y:cy};
+    var sx = dx!==0 ? (w/2)/Math.abs(dx) : Infinity;
+    var sy = dy!==0 ? (h/2)/Math.abs(dy) : Infinity;
+    var s = Math.min(sx,sy);
+    return {x:cx+dx*s, y:cy+dy*s};
+  }
+  var svg = document.getElementById("map-svg");
+  if(!svg) return;
+  var h = '<defs>'+
+    '<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker>'+
+    '<marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#BE123C"/></marker>'+
+    '</defs>';
+  var byId = {}; N.forEach(function(n){byId[n.id]=n;});
+  /* linhas tracejadas (hoje) */
+  DASH.forEach(function(d){
+    var a=byId[d.a], b=byId[d.b];
+    var p1=clip(a.x,a.y,NW,NH,b.x,b.y), p2=clip(b.x,b.y,NW,NH,a.x,a.y);
+    var mx=(p1.x+p2.x)/2, my=(p1.y+p2.y)/2, w=d.label.length*5.7+14;
+    h += '<line x1="'+p1.x+'" y1="'+p1.y+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="#BE123C" stroke-width="2" stroke-dasharray="6 5" marker-start="url(#arrR)" marker-end="url(#arrR)"/>';
+    h += '<rect x="'+(mx-w/2)+'" y="'+(my-10)+'" width="'+w+'" height="20" rx="6" fill="#FFF1F2" stroke="#FECDD3"/>';
+    h += '<text x="'+mx+'" y="'+(my+4)+'" text-anchor="middle" font-size="11" font-weight="600" fill="#BE123C">'+esc(d.label)+'</text>';
+  });
+  /* linhas até a Torre */
+  N.forEach(function(n){
+    var p1=clip(n.x,n.y,NW,NH,T.x,T.y), p2=clip(T.x,T.y,T.w,T.h,n.x,n.y);
+    var ms = (n.send?'marker-start="url(#arr)" ':'');
+    var me = (n.recv?'marker-end="url(#arr)"':'');
+    /* seta no ator = recebe; seta na Torre = envia */
+    var startM = n.recv ? 'marker-start="url(#arr)" ' : '';
+    var endM = n.send ? 'marker-end="url(#arr)"' : '';
+    h += '<line x1="'+p1.x+'" y1="'+p1.y+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="#94A3B8" stroke-width="1.8" '+startM+endM+'/>';
+    var lines=[]; if(n.send) lines.push("envia: "+n.send); if(n.recv) lines.push("recebe: "+n.recv);
+    var mx=(p1.x+p2.x)/2, my=(p1.y+p2.y)/2;
+    var mw=0; lines.forEach(function(l){ if(l.length>mw) mw=l.length; });
+    var w=mw*5.6+14, hh=lines.length*15+8;
+    h += '<rect x="'+(mx-w/2)+'" y="'+(my-hh/2)+'" width="'+w+'" height="'+hh+'" rx="6" fill="#fff" stroke="#E2E8F0"/>';
+    lines.forEach(function(l,i){
+      h += '<text x="'+mx+'" y="'+(my-hh/2+15+i*15-2)+'" text-anchor="middle" font-size="11" fill="#334155">'+esc(l)+'</text>';
+    });
+  });
+  /* Torre */
+  h += '<rect x="'+(T.x-T.w/2)+'" y="'+(T.y-T.h/2)+'" width="'+T.w+'" height="'+T.h+'" rx="14" fill="#0F172A"/>';
+  h += '<text x="'+T.x+'" y="'+(T.y-4)+'" text-anchor="middle" font-size="17" font-weight="800" fill="#fff">Torre de Controle</text>';
+  h += '<text x="'+T.x+'" y="'+(T.y+16)+'" text-anchor="middle" font-size="11.5" fill="#BFDBFE">exceções · ETA · playbooks</text>';
+  /* atores */
+  N.forEach(function(n){
+    var t=TIERS[n.t];
+    h += '<rect x="'+(n.x-NW/2)+'" y="'+(n.y-NH/2)+'" width="'+NW+'" height="'+NH+'" rx="12" fill="'+t.fill+'" stroke="'+t.stroke+'" stroke-width="1.8"/>';
+    var y0 = n.name.length===2 ? n.y-12 : n.y-5;
+    n.name.forEach(function(l,i){
+      h += '<text x="'+n.x+'" y="'+(y0+i*15)+'" text-anchor="middle" font-size="13.5" font-weight="700" fill="'+t.ink+'">'+esc(l)+'</text>';
+    });
+    h += '<text x="'+n.x+'" y="'+(n.y+NH/2-9)+'" text-anchor="middle" font-size="10.5" fill="'+t.sub+'">'+esc(n.pi)+'</text>';
+  });
+  svg.innerHTML = h;
+
+  var cards = document.getElementById("map-cards"), ch="";
+  N.forEach(function(n){
+    var f=[]; if(n.send) f.push("<b>Envia:</b> "+esc(n.send)); if(n.recv) f.push("<b>Recebe:</b> "+esc(n.recv));
+    ch += '<div class="mcard"><span class="tier t-'+n.t+'">'+esc(TIERS[n.t].label)+'</span><div class="nm">'+esc(n.name.join(" "))+'</div><div class="pi">'+esc(n.pi)+'</div><div class="fl">'+f.join("<br>")+'</div></div>';
+  });
+  cards.innerHTML = ch;
+})();
+
+/* ===== 03 requisitos ===== */
+(function(){
+  var R = {
+    R1:["Painel único","must"], R2:["Integração ERP e TMS","must"], R3:["Regras de exceção","must"],
+    R4:["Ausência de dado","must"], R5:["WhatsApp do motorista","must"], R6:["ETA","must"], R7:["Causa-raiz","must"],
+    R8:["Aviso ao cliente","should"], R9:["Ação sugerida","should"], R10:["Indicadores","should"],
+    R11:["Score preditivo","could"], R12:["Portal de rastreio","could"], R13:["Ação automática","wont"]
+  };
+  function chip(id){ var r=R[id]; return '<span class="rq m-'+r[1]+'"><b>'+id+'</b> '+r[0]+'</span>'; }
+  function cell(ids, cap, hot, meta){
+    return '<div class="qd'+(hot?' hot':'')+'"><span class="cp">'+cap+'</span><span class="cp2">'+meta+'</span>'+ids.map(chip).join("")+'</div>';
+  }
+  var el = document.getElementById("mx"); if(!el) return;
+  var h = '<div></div><div class="ax">Esforço baixo</div><div class="ax">Esforço médio</div><div class="ax">Esforço alto</div>';
+  h += '<div class="ax">Valor alto</div>'+
+       cell(["R4"],"Ganho rápido",true,"Valor alto · esforço baixo")+
+       cell(["R1","R3","R5","R8"],"Núcleo de valor",true,"Valor alto · esforço médio")+
+       cell(["R2","R6","R9","R13"],"Apostas estratégicas",false,"Valor alto · esforço alto");
+  h += '<div class="ax">Valor médio</div>'+
+       cell(["R7"],"Complemento barato",false,"Valor médio · esforço baixo")+
+       cell(["R10"],"Complemento",false,"Valor médio · esforço médio")+
+       cell(["R11","R12"],"Reavaliar depois",false,"Valor médio · esforço alto");
+  el.innerHTML = h;
+
+  var rm = document.getElementById("rm");
+  var ph = [
+    ["Fase 0","4 a 6 semanas","Linha de base, dados, LGPD, WhatsApp e consulta ao mercado.",[]],
+    ["Piloto","6 semanas","3 analistas, cerca de 30% do volume, com grupo de controle.",["R1","R2","R3","R4","R5","R6","R7"]],
+    ["Fase 1.5","após o piloto","Playbooks aprovados e ação recomendada.",["R9"]],
+    ["Escala","após o gate","Demais analistas, aviso ao cliente e score ativo.",["R8","R10","R11","R12"]]
+  ];
+  var o = "";
+  ph.forEach(function(p){
+    o += '<div class="ph"><div class="hd">'+p[0]+'</div><div class="tt">'+p[1]+'</div><div class="ds">'+p[2]+'</div><div class="chips">'+p[3].map(chip).join("")+'</div></div>';
+  });
+  rm.innerHTML = o;
+})();
+
+</script>
+</body>
+</html>
